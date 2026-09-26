@@ -1,6 +1,10 @@
 """Heat: thermal expansion, one-dimensional conduction and convection
-(steady state, constant properties). Temperature differences are in kelvin,
-which equal degrees Celsius of difference."""
+(steady state, constant properties).
+
+Every ΔT input is a temperature *difference* (``delta_degC``), so it takes
+``50 K``, ``50 delta_degC`` or ``90 delta_degF`` alike. An absolute temperature
+such as ``50 degC`` is refused rather than read as 323 K: subtract the two
+temperatures first (Quantity Math gives ``degC - degC`` as a difference)."""
 
 from __future__ import annotations
 
@@ -14,7 +18,7 @@ __all__ = ["convection", "pipe_conduction", "thermal_expansion", "wall_conductio
 M = Quantity["m"]
 Mm = Quantity["mm"]
 M2 = Quantity["m^2"]
-K = Quantity["K"]
+DeltaT = Quantity["delta_degC"]
 W = Quantity["W"]
 Expansion = Quantity["1/K"]
 Conductivity = Quantity["W/(m*K)"]
@@ -31,7 +35,7 @@ class HeatFlow(NamedTuple):
 def thermal_expansion(
     length: M,
     expansion: Expansion = Quantity(12e-6, "1/K"),  # noqa: B008 - immutable
-    temperature_change: K = Quantity(50.0, "K"),  # noqa: B008
+    temperature_change: DeltaT = Quantity(50.0, "delta_degC"),  # noqa: B008
 ) -> Mm:
     """The change in length of a free bar, ΔL = α L ΔT."""
     return (expansion * length * temperature_change).to("mm")
@@ -42,7 +46,7 @@ def wall_conduction(
     conductivity: Conductivity,
     thickness: Mm = Quantity(100.0, "mm"),  # noqa: B008 - immutable
     area: M2 = Quantity(1.0, "m^2"),  # noqa: B008
-    temperature_difference: K = Quantity(20.0, "K"),  # noqa: B008
+    temperature_difference: DeltaT = Quantity(20.0, "delta_degC"),  # noqa: B008
 ) -> HeatFlow:
     """Heat flow through a plane wall, Q = k A ΔT / t, and its thermal
     resistance t / (k A) (add resistances in series for layered walls)."""
@@ -56,7 +60,7 @@ def pipe_conduction(
     inner_radius: Mm = Quantity(25.0, "mm"),  # noqa: B008 - immutable
     outer_radius: Mm = Quantity(50.0, "mm"),  # noqa: B008
     length: M = Quantity(1.0, "m"),  # noqa: B008
-    temperature_difference: K = Quantity(20.0, "K"),  # noqa: B008
+    temperature_difference: DeltaT = Quantity(20.0, "delta_degC"),  # noqa: B008
 ) -> HeatFlow:
     """Radial heat flow through a pipe wall or insulation layer,
     Q = 2π k L ΔT / ln(r₂ / r₁)."""
@@ -71,7 +75,7 @@ def pipe_conduction(
 def convection(
     coefficient: HTC = Quantity(10.0, "W/(m^2*K)"),  # noqa: B008 - immutable
     area: M2 = Quantity(1.0, "m^2"),  # noqa: B008
-    temperature_difference: K = Quantity(20.0, "K"),  # noqa: B008
+    temperature_difference: DeltaT = Quantity(20.0, "delta_degC"),  # noqa: B008
 ) -> HeatFlow:
     """Heat flow from a surface to a fluid, Q = h A ΔT (Newton's law of
     cooling). Typical h: 5–25 W/(m²·K) still air, 10–200 forced air,
