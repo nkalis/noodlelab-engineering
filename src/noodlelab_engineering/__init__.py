@@ -12,7 +12,8 @@ closed-form ones for preliminary design; each node's description says which.
 * :mod:`.structures`: beams, stresses, buckling and safety factors
 * :mod:`.thermal`: expansion, conduction and convection
 * :mod:`.fluids`: Reynolds number and pipe pressure drop
-* :mod:`.controls`: step and frequency responses of transfer functions
+* :mod:`.controls`: control systems: build, connect, analyse and design for linear
+  systems (transfer functions and state space), as in MATLAB's Control System Toolbox
 * :mod:`.decibels`: dB conversions and gain/loss budgets
 * :mod:`.trade`: weighted decision matrices
 """
