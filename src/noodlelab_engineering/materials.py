@@ -9,11 +9,11 @@ first-ply failure strength.
 
 from __future__ import annotations
 
-from typing import Any, Literal, NamedTuple
+from typing import Annotated, Any, NamedTuple
 
 import pandas as pd
 
-from noodlelab import Quantity, node
+from noodlelab import Param, Quantity, node
 
 __all__ = ["material", "material_table"]
 
@@ -38,24 +38,10 @@ MATERIALS: dict[str, tuple[float, float, float, float, float, float, float]] = {
     "ABS": (2.3, 0.35, 1050.0, 40.0, 44.0, 90.0, 0.17),
 }
 
-MaterialName = Literal[
-    "Steel S275",
-    "Steel S355",
-    "Stainless steel 304",
-    "Stainless steel 316",
-    "Aluminium 6061-T6",
-    "Aluminium 7075-T6",
-    "Titanium Ti-6Al-4V",
-    "Copper C11000",
-    "Brass C36000",
-    "Magnesium AZ31B",
-    "CFRP (quasi-isotropic)",
-    "GFRP (quasi-isotropic)",
-    "PEEK",
-    "Nylon 6/6",
-    "Polycarbonate",
-    "ABS",
-]
+# a plain str with the names as its choices, not a Literal: a name worked out
+# upstream (the best option of a Decision Matrix) links in too, and is checked
+# when the node runs
+MaterialName = Annotated[str, Param(choices=list(MATERIALS))]
 
 GPa = Quantity["GPa"]
 MPa = Quantity["MPa"]
@@ -80,6 +66,8 @@ def material(name: MaterialName = "Aluminium 6061-T6") -> Material:
     """Typical properties of a common material: stiffness, density, strength,
     thermal expansion and conductivity. For preliminary design: check a
     datasheet before relying on the strengths."""
+    if name not in MATERIALS:
+        raise ValueError(f"No material called '{name}'. The list has: {', '.join(MATERIALS)}")
     e, nu, rho, sy, su, alpha, k = MATERIALS[name]
     return Material(
         Quantity(e, "GPa"),
