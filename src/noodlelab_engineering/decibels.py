@@ -7,6 +7,7 @@ import math
 import re
 from typing import Annotated, Literal, NamedTuple
 
+import numpy as np
 import pandas as pd
 
 from noodlelab import Param, node
@@ -23,9 +24,14 @@ Kind = Annotated[
 def to_db(ratio: float, kind: Kind = "power") -> float:
     """A ratio in decibels: 10 log10 of a power ratio, 20 log10 of an
     amplitude ratio. Use a ratio to 1 mW for dBm, to 1 W for dBW."""
+    factor = 10.0 if kind == "power" else 20.0
+    if isinstance(ratio, np.ndarray):  # a batch of Monte Carlo trials, as the scalar case
+        if (ratio <= 0).any():
+            raise ValueError("Only a positive ratio has a value in dB")
+        return factor * np.log10(ratio)
     if ratio <= 0:
         raise ValueError("Only a positive ratio has a value in dB")
-    return (10.0 if kind == "power" else 20.0) * math.log10(ratio)
+    return factor * math.log10(ratio)
 
 
 @node(category="Engineering/Decibels", title="From dB", fold=True, vectorized=True)
