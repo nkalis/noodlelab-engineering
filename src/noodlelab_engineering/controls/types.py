@@ -197,7 +197,7 @@ def _preview_system(value: Any, ctx: Any) -> Preview:
     summary, text = _describe(value)
     if not (isinstance(value, control.TransferFunction) and value.ninputs == value.noutputs == 1):
         return Preview(kind="text", summary=summary, text=text)
-    from noodlelab.reports.math import math_preview
+    from noodlelab.plugin.math import math_preview
 
     var = "s" if continuous(value) else "z"
     num, den = control.tfdata(value)

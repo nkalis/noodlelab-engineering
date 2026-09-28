@@ -18,7 +18,7 @@ from matplotlib.figure import Figure
 from numpy.typing import NDArray
 
 from noodlelab import Param, Quantity, node
-from noodlelab.core.units import is_quantity
+from noodlelab.plugin.units import is_quantity
 
 from .types import (
     Signal,

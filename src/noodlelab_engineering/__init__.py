@@ -20,7 +20,7 @@ closed-form ones for preliminary design; each node's description says which.
 
 from __future__ import annotations
 
-from noodlelab.tiers import require
+from noodlelab.plugin import require
 
 require("engineering", "control", "matplotlib", "numpy", "pandas", "pint", "scipy")
 

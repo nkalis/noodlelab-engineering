@@ -11,7 +11,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from noodlelab import Param, Quantity, node
-from noodlelab.core.units import is_quantity, ureg
+from noodlelab.plugin.units import is_quantity, ureg
 
 from .types import Coefficients, System, poly, proper_problem
 
@@ -122,9 +122,9 @@ def _check_zero_pole_gain(zeros: str = "", poles: str = "-1, -2") -> str | None:
 
 def _si(value: Any, name: str, unit: str | None = None) -> NDArray[np.float64]:
     """A matrix input as numbers: in ``unit`` when given, else in SI base units."""
-    from noodlelab.nodes.maths.linalg import _split
+    from noodlelab.nodes.maths.linalg import split_matrix
 
-    arr, u = _split(value, name)
+    arr, u = split_matrix(value, name)
     if unit is not None and is_quantity(value) and not ureg().Quantity(1, u).dimensionless:
         try:
             return arr * ureg().Quantity(1, u).m_as(unit)
@@ -274,7 +274,7 @@ def mass_spring_damper(
     N/m and C in N·s/m (other units are converted; plain numbers are SI)."""
     import control
 
-    from noodlelab.nodes.maths.linalg import _split
+    from noodlelab.nodes.maths.linalg import split_matrix
 
     m = _si(mass, "mass", "kg")
     k = _si(stiffness, "stiffness", "N/m")
@@ -285,7 +285,7 @@ def mass_spring_damper(
     for name, arr in (("mass", m), ("stiffness", k), ("damping", c)):
         if arr.shape != (n, n):
             raise ValueError(f"{name} must be {n}×{n}, like the stiffness matrix")
-    _split(stiffness, "stiffness", square=True)
+    split_matrix(stiffness, "stiffness", square=True)
     minv = np.linalg.inv(m)
     zero, one = np.zeros((n, n)), np.eye(n)
     a = np.block([[zero, one], [-minv @ k, -minv @ c]])

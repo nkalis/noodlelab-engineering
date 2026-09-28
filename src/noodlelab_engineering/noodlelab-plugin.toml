@@ -1,0 +1,7 @@
+name = "engineering"
+title = "Engineering"
+description = "Structures, sections, materials, fluids, thermal, decibels, trade studies and control systems"
+api = 1
+requires = { maths = "*", symbolic = "*" }
+homepage = "https://github.com/nkalis/noodlelab"
+license = "MIT"
