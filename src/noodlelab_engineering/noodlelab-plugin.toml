@@ -2,6 +2,6 @@ name = "engineering"
 title = "Engineering"
 description = "Structures, sections, materials, fluids, thermal, decibels, trade studies and control systems"
 api = 1
-requires = { maths = "*", symbolic = "*" }
+requires = { maths = ">=1,<2", symbolic = ">=1,<2" }
 homepage = "https://github.com/nkalis/noodlelab"
 license = "MIT"

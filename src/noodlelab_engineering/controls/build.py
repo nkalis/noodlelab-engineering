@@ -122,7 +122,7 @@ def _check_zero_pole_gain(zeros: str = "", poles: str = "-1, -2") -> str | None:
 
 def _si(value: Any, name: str, unit: str | None = None) -> NDArray[np.float64]:
     """A matrix input as numbers: in ``unit`` when given, else in SI base units."""
-    from noodlelab.nodes.maths.linalg import split_matrix
+    from noodlelab_maths.linalg import split_matrix
 
     arr, u = split_matrix(value, name)
     if unit is not None and is_quantity(value) and not ureg().Quantity(1, u).dimensionless:
@@ -273,8 +273,7 @@ def mass_spring_damper(
     F1… at ``force_at``, and the outputs as ``measure`` says. M in kg, K in
     N/m and C in N·s/m (other units are converted; plain numbers are SI)."""
     import control
-
-    from noodlelab.nodes.maths.linalg import split_matrix
+    from noodlelab_maths.linalg import split_matrix
 
     m = _si(mass, "mass", "kg")
     k = _si(stiffness, "stiffness", "N/m")
@@ -331,7 +330,7 @@ def transfer_function_expression(
         str, Param(description="A function of s: 10/(s*(s + 2)), K/(tau*s + 1)")
     ] = "10/(s*(s + 2))",
     values: Annotated[
-        Any, Param(type=("noodlelab.nodes.symbolic.types.SymbolValues", type(None)))
+        Any, Param(type=("noodlelab_symbolic.types.SymbolValues", type(None)))
     ] = None,
     variable: str = "s",
 ) -> System:
@@ -340,8 +339,7 @@ def transfer_function_expression(
     ``K/(tau*s + 1)`` with K and tau from a Values node."""
     import control
     import sympy as sp
-
-    from noodlelab.nodes.symbolic.parse import parse_expression
+    from noodlelab_symbolic.parse import parse_expression
 
     expr = parse_expression(text)
     s = sp.Symbol(variable)
