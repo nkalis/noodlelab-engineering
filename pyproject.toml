@@ -19,7 +19,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://nkalis.github.io/noodlelab/"
+Homepage = "https://github.com/nkalis/noodlelab-engineering"
+Documentation = "https://nkalis.github.io/noodlelab/"
 
 # how noodlelab finds it; the name is the prefix of its node ids (engineering.<node>)
 [project.entry-points."noodlelab.nodes"]
